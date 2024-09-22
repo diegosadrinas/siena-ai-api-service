@@ -1,0 +1,8 @@
+.dist
+node_modules
+coverage
+__generated__
+build
+cdk.out
+*.json
+*.md
