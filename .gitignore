@@ -1,7 +1,6 @@
 # AWS CDK specific
 cdk.out/
 cdk.context.json
-bin/
 
 # Node.js specific
 node_modules/
