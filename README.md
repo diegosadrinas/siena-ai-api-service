@@ -1,8 +1,21 @@
 # Siena AI Application
 
-This project is an AWS Cloud Development Kit (CDK) application written in TypeScript. It deploys an RestAPI service to ingest data and deploys several AWS Lambda functions that consumes OpenAI api service:
-  * CSV Uploader: The CSV Uploader is a service within the Siena AI application that allows users to upload CSV files. The uploaded CSV files are processed by an AWS Lambda function, which extracts the data and stores it in DynamoDB. This service enables efficient ingestion and storage of large datasets, facilitating further processing and analysis.
-  * Classifier: 
+This project is an AWS Cloud Development Kit (CDK) application written in TypeScript. It deploys a RestAPI service to ingest data and several AWS Lambda functions that consume OpenAI api service:
+  * **CSV Uploader**: The CSV Uploader is a service within the Siena AI application that allows users to upload CSV files. The uploaded CSV files are processed by an AWS Lambda function, which extracts the data and stores it in DynamoDB. This service enables efficient ingestion and storage of large datasets, facilitating further processing and analysis.
+  * **Classifier**: The Classifier is an internal service (not exposed directly to the user as an endpoint). It processes incoming messages to classify intents, validate them, and generate appropriate responses. This ensures that the application can understand user messages, generate meaningful responses, and maintain a record of interactions for future use. The service performs the following key functions:
+      1. **Classify Intent**: The service uses machine learning models to classify the intent of the incoming message. This helps in understanding the purpose or action that the user wants to perform.
+
+      2. **Validate Intent**: After classifying the intent, the service validates it to ensure that the predicted intents are relevant and accurate.
+
+      3. **Generate Response**: For each valid intent, the service retrieves predefined response templates, personalizes them with the sender's and receiver's usernames, and enhances the response for better user experience.
+
+      4. **Store Response**: The final enhanced response, along with the original message, sender, receiver, intents, and channel information, is stored in DynamoDB for future reference and analysis.
+
+  * **Conversations**: The Conversations Service retrieves stored conversations from a DynamoDB table and supports pagination using `limit` and `startKey` parameters.
+  * **Messages**: The Messages service retrieves all messages within a specific conversation stored in DynamoDB. 
+
+  
+
 
 ## Table of Contents
 
@@ -123,8 +136,7 @@ The Messages endpoint allows users to retrieve all messages within a specific co
 ## OpenAI Mock Data for testing requests
 Since OPENAI does not allow to perform actual requests on its free tier, I have created the following responses based on the data provided from ChatGPT. This allows you to test the existing handlers with what would be the most accurate mock data available, since it is provided by chatGPT itself and is coherent with openai documentation.
 
-  ### Classify Intent Response:
-    ```javascript
+  ### Classify Intent sample response:
       {
         id: 'cmpl-6lFZK7Tp47B5F1LkHsfXYZ12345',
         object: 'text_completion',
@@ -144,16 +156,14 @@ Since OPENAI does not allow to perform actual requests on its free tier, I have 
           total_tokens: 93,
         }
       };
-    ```
 
-    - Prompt: https://drive.google.com/file/d/1lYPGx9s0CnmtJU3DRoTCSk0NCKCdrB8o/view?usp=drive_link
-    - Response: https://drive.google.com/file/d/1hDLrzdXmhPIyzTHcLllFSmfKEbBxPvlr/view?usp=drive_link
-    - For multiple intents: https://drive.google.com/file/d/16xcSf54KVWqj8AH2Mon5VnQkSoPtqEso/view?usp=sharing
-    - Multiple Intents Response: https://drive.google.com/file/d/1JANQT6Un38GZq8J4DcAyqvychoqVVqzh/view?usp=drive_link
+  - Prompt: https://drive.google.com/file/d/1lYPGx9s0CnmtJU3DRoTCSk0NCKCdrB8o/view?usp=drive_link
+  - Response: https://drive.google.com/file/d/1hDLrzdXmhPIyzTHcLllFSmfKEbBxPvlr/view?usp=drive_link
+  - For multiple intents: https://drive.google.com/file/d/16xcSf54KVWqj8AH2Mon5VnQkSoPtqEso/view?usp=sharing
+  - Multiple Intents Response: https://drive.google.com/file/d/1JANQT6Un38GZq8J4DcAyqvychoqVVqzh/view?usp=drive_link
 
 
-  ### Validate Intent Response:
-    ```javascript
+  ### Validate Intent sample response:
     {
       id: 'cmpl-6lGxZyTp47B6V1LkHsfXYZ12345',
       object: 'text_completion',
@@ -173,15 +183,13 @@ Since OPENAI does not allow to perform actual requests on its free tier, I have 
         total_tokens: 160,
       },
     };
-    ```
 
   - Prompt: https://drive.google.com/file/d/1tXtF97FAeE6Ro8gqspHMR4ByRfF5lbZ1/view?usp=drive_link
   - Response: https://drive.google.com/file/d/1XB5hgAZYYNx6v5-1U-DQILEOr371dHey/view?usp=drive_link
 
 
 
-  ### Enhance Response: 
-    ```javascript
+  ### Enhance Response sample response: 
     {
       id: 'cmpl-6lJYV1Tp48F5G9PfHsfXYZ12345',
       object: 'text_completion',
@@ -201,7 +209,6 @@ Since OPENAI does not allow to perform actual requests on its free tier, I have 
         total_tokens: 148,
       },
     };
-    ```
 
   - Prompt & Response: https://drive.google.com/file/d/1MZw5fMmCoYVVXl8HJC84sYcD4f-kv2iC/view?usp=drive_link
 
